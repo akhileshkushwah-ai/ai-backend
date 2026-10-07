@@ -2,6 +2,66 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { DUMMY_STUDENT_REPORT, FullStudentReport } from './data/dummy-student-report';
 
+export interface SabcqPhaseInfo {
+  id: string;
+  phaseNumber: number;
+  name: string;
+  durationMinutes: string;
+  focus: string;
+}
+
+export const SABCQ_PHASES: SabcqPhaseInfo[] = [
+  {
+    id: 'PHASE_1_INTRO',
+    phaseNumber: 1,
+    name: 'Introduction & Counseling Setup',
+    durationMinutes: '2 Mins',
+    focus: 'Welcome student, introduce SABCQ Student Cognitive Pattern Program philosophy, outline 6-phase transformational roadmap, ensure student comfort and interactive consent.',
+  },
+  {
+    id: 'PHASE_2_ACADEMIC',
+    phaseNumber: 2,
+    name: 'Academic Profile & Learning Foundations',
+    durationMinutes: '15 Mins',
+    focus: 'Analyze Reading Skills, Neuro-Read (65 WPM, Comprehension 100%, Retention 60%), Concentration (Visual 88%, Auditory 100%, Kinesthetic 94%, Overall 47%), Memory (Short/Long/Visual/Auditory), Calculation (20%), Grasping (26%), and Study Potential.',
+  },
+  {
+    id: 'PHASE_3_BEHAVIOUR',
+    phaseNumber: 3,
+    name: 'Behaviour Analysis & Mindset Pattern',
+    durationMinutes: '8 Mins',
+    focus: 'Analyze Sincerity (100%), Amiable (90%), Extraversion (90%), Diligence (70%), Participation (38%), Hesitation (67%), Inquisitiveness (62%), Neuroticism (53%), and Independent Decision Making.',
+  },
+  {
+    id: 'PHASE_4_SKILL',
+    phaseNumber: 4,
+    name: 'Skill Profile & Real-World Application',
+    durationMinutes: '7 Mins',
+    focus: 'Analyze Analytical Skills (96%), Convincing (90%), Leadership (82%), Innovation (75%), Communication (48%), Time Management (46%), Problem Solving (53%), and Managerial Skills (44%).',
+  },
+  {
+    id: 'PHASE_5_IMPROVEMENT',
+    phaseNumber: 5,
+    name: 'Personal Improvement Plan & SABCQ Tools',
+    durationMinutes: '7 Mins',
+    focus: 'Practical actions: Neuro-Read 30-day practice, Neuro-Concentration time-blocking, Neuro-Memory active recall cycle (Read -> Understand -> Recall -> Revise -> Recall Again), Habit Tracker & Skill Tracker.',
+  },
+  {
+    id: 'PHASE_6_CAREER',
+    phaseNumber: 6,
+    name: 'Career Direction & 30-Day Exploration Roadmap',
+    durationMinutes: '5 Mins',
+    focus: 'Present current profile fit (Management / Law / Tech) as an age-appropriate direction to explore (NOT a final decision), connect report strengths to 30-day exploration roadmap & tools.',
+  },
+  {
+    id: 'PHASE_7_CLOSING',
+    phaseNumber: 7,
+    name: 'Closing & Next 3 Immediate Actions',
+    durationMinutes: '1 Min',
+    focus: 'Reiterate Day 1 vs Day 30 growth mindset, confirm student top 3 action items for tomorrow, final inspiring sign-off ("One right decision can lead you towards your fortune...").',
+  },
+];
+
 export interface ActiveCounselorSession {
   sessionId: string;
   studentId: string;
@@ -15,6 +75,61 @@ export interface ActiveCounselorSession {
   history: { role: 'user' | 'model'; parts: string; timestamp: Date }[];
   systemInstruction?: string;
   activeModelName?: string;
+  currentPhaseIndex: number;
+  currentPhase: SabcqPhaseInfo;
+  phaseTurnCount: number;
+}
+
+/**
+ * Builds official SABCQ Master System Prompt for Priya Sharma following Client Training Protocol
+ */
+export function buildSabcqSystemInstruction(
+  report: FullStudentReport,
+  languagePreference = 'hinglish',
+  currentPhase: SabcqPhaseInfo = SABCQ_PHASES[0],
+): string {
+  const context = report.studentAssessmentContext;
+  const reportLines = context.reportData
+    .map(item => `- ${item.name} (${item.section}): Score ${item.score}%${item.category ? ` [${item.category}]` : ''}`)
+    .join('\n');
+  const testLines = context.testReport
+    .map(item => `- ${item.name}: Score ${item.score}`)
+    .join('\n');
+
+  return `
+You are Priya Sharma, a senior, warm, empathetic, and highly experienced AI Career Counselor at SABCQ.
+You MUST speak naturally like a real human career counselor conducting a transformational 45-minute 1-on-1 video consultation room.
+Use conversational ${languagePreference === 'hindi' ? 'Hindi' : 'Hinglish (Mix of Hindi and English written in Latin script)'}.
+
+CRITICAL SABCQ COUNSELING PHILOSOPHY & MANDATES (CLIENT TRAINING PROTOCOL):
+1. SABCQ is a Student Cognitive Pattern Program. NEVER treat scores as fixed permanent labels or verdicts.
+2. DO NOT use negative words like "weak", "lazy", or "poor". Use positive constructive phrasing like "needs practice right now", "area for growth", or "opportunity to develop".
+3. Use the student's report as visual evidence. Do NOT read every score aloud monotonously. Always connect scores to real-life student experiences.
+4. RESPONSE LENGTH & STRUCTURE (STRICT MANDATE):
+   - Every response MUST be comprehensive, structured, warm, and detailed (target: 150 to 250 words per response). NEVER give abrupt 1-2 line short replies!
+   - EVERY TOPIC RESPONSE MUST FOLLOW THIS 4-STEP SABCQ COUNSELING FRAMEWORK:
+     * STEP 1 [STRENGTH]: Acknowledge what is already working well.
+     * STEP 2 [MEANING]: Explain why this ability matters in daily studies, real life, or career.
+     * STEP 3 [GAP/AREA TO WORK]: Identify the key area needing attention with empathy.
+     * STEP 4 [ACTION & SABCQ TOOL]: Provide 1 practical next step and recommend relevant SABCQ Tools (Neuro-Read, Neuro-Concentration, Neuro-Memory, Habit Tracker, Skill Tracker, Neuro-Bricks).
+   - END EVERY RESPONSE WITH 1 WARM, INTERACTIVE REFLECTIVE QUESTION to keep the student engaged.
+
+STUDENT PROFILE & ASSESSMENT CONTEXT:
+- Student Name: ${report.studentName}
+- Grade/Class: ${report.grade || '11th Standard'} • Stream: ${report.stream || 'Commerce'}
+- Context & Report Scores:
+--- SECTION SCORES ---
+${reportLines}
+
+--- TEST SCORES ---
+${testLines}
+
+CURRENT SABCQ COUNSELING SESSION PHASE (${currentPhase.phaseNumber}/7):
+- Phase Name: ${currentPhase.name} (${currentPhase.durationMinutes})
+- Phase Agenda & Focus: ${currentPhase.focus}
+
+GUIDE THE STUDENT THROUGH THIS PHASE NATURALLY. WHEN STUDENT ANSWERS OR ASKS A QUESTION, RESPOND DEEPLY USING THE 4-STEP FRAMEWORK.
+`.trim();
 }
 
 @Injectable()
@@ -45,28 +160,8 @@ export class AiCounselorService {
     const sId = studentId || report.studentId || 'STD_88492';
     const sessionId = `sess_${sId}_${Date.now()}`;
 
-    const formattedReport = this.formatAssessmentContext(report.studentAssessmentContext);
-
-    const systemInstruction = `
-You are Priya Sharma, a senior, warm, empathetic, and highly experienced AI Career Counselor at SABCQ.
-You MUST speak like a real human career counselor in a video consultation room.
-Use conversational ${languagePreference === 'hindi' ? 'Hindi' : 'Hinglish (Mix of Hindi and English written in Latin script)'}.
-
-CRITICAL INSTRUCTIONS ABOUT STUDENT ASSESSMENT REPORT:
-1. You ALREADY HAVE the student's complete assessment report loaded into your prompt context below.
-2. The student WILL NOT send their report again in follow-up chat messages.
-3. Every answer you give MUST be deeply customized based on their specific assessment scores and traits:
-   - Student Name: ${report.studentName}
-   - Assessment Context & Scores:
-${formattedReport}
-
-4. AI GUIDELINES TO FOLLOW STRICTLY:
-   - Use the report as primary student context.
-   - Personalize answers using scores (e.g. highlight high career options like LAW (75%), BUSINESS (68%), CREATIVE PERSONALITY (84%), READING SKILLS (100%), ACCEPTANCE OF CHALLENGES (100%)).
-   - Do NOT ask student to repeat report data.
-   - Explain recommendations using relevant report factors.
-   - Speak naturally as a human counselor. Keep answers warm, personal, structured, and short (under 120 words per response so it feels natural to listen to).
-`;
+    const initialPhase = SABCQ_PHASES[0];
+    const systemInstruction = buildSabcqSystemInstruction(report, languagePreference, initialPhase);
 
     let chatSession: any = null;
     let isLiveGemini = false;
@@ -119,6 +214,9 @@ ${formattedReport}
       history: [],
       systemInstruction,
       activeModelName: selectedModelName,
+      currentPhaseIndex: 0,
+      currentPhase: initialPhase,
+      phaseTurnCount: 0,
     };
 
     this.activeSessions.set(sessionId, sessionObj);
@@ -127,9 +225,11 @@ ${formattedReport}
       success: true,
       sessionId,
       counselorName: 'Priya Sharma',
-      message: 'AI Counselor Session Initialized successfully with Student Report loaded in memory!',
+      message: 'AI Counselor Session Initialized successfully with SABCQ 45-Minute Master Protocol!',
       isLiveGemini,
       ttlMinutes: 15,
+      currentPhase: initialPhase,
+      totalPhasesCount: SABCQ_PHASES.length,
       reportLoaded: {
         studentName: report.studentName,
         totalScoresCount: report.studentAssessmentContext.reportData.length,
@@ -160,6 +260,24 @@ ${formattedReport}
 
     session.lastActiveAt = new Date();
     session.messageCount++;
+    session.phaseTurnCount++;
+
+    // SABCQ Phase Progression Logic
+    let targetPhaseIndex = 0;
+    if (session.messageCount <= 1) targetPhaseIndex = 0; // Intro
+    else if (session.messageCount <= 5) targetPhaseIndex = 1; // Academic Profile (9 Mins)
+    else if (session.messageCount <= 8) targetPhaseIndex = 2; // Behaviour Analysis (9 Mins)
+    else if (session.messageCount <= 11) targetPhaseIndex = 3; // Skill Analysis (11 Mins)
+    else if (session.messageCount <= 14) targetPhaseIndex = 4; // Personal Improvement Plan & SABCQ Tools (7 Mins)
+    else if (session.messageCount <= 17) targetPhaseIndex = 5; // Career Guidance & Roadmap (10 Mins)
+    else targetPhaseIndex = 6; // Closing & Transformation Summary (5 Mins)
+
+    if (targetPhaseIndex !== session.currentPhaseIndex && SABCQ_PHASES[targetPhaseIndex]) {
+      session.currentPhaseIndex = targetPhaseIndex;
+      session.currentPhase = SABCQ_PHASES[targetPhaseIndex];
+      session.phaseTurnCount = 1;
+      this.logger.log(`Session ${sessionId} advanced to SABCQ Phase ${session.currentPhase.phaseNumber}: ${session.currentPhase.name}`);
+    }
 
     let responseText = '';
 
@@ -232,6 +350,8 @@ ${formattedReport}
       sessionId,
       responseText,
       messageCount: session.messageCount,
+      currentPhase: session.currentPhase,
+      totalPhasesCount: SABCQ_PHASES.length,
       reportPayloadSentInThisRequest: false,
       isLiveGemini: session.isLiveGemini,
       lastActiveAt: session.lastActiveAt,

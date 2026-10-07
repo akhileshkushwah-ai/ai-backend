@@ -11,6 +11,8 @@ export declare class AiCounselorController {
         message: string;
         isLiveGemini: boolean;
         ttlMinutes: number;
+        currentPhase: import("./ai-counselor.service").SabcqPhaseInfo;
+        totalPhasesCount: number;
         reportLoaded: {
             studentName: string;
             totalScoresCount: number;
@@ -22,6 +24,8 @@ export declare class AiCounselorController {
         sessionId: string;
         responseText: string;
         messageCount: number;
+        currentPhase: import("./ai-counselor.service").SabcqPhaseInfo;
+        totalPhasesCount: number;
         reportPayloadSentInThisRequest: boolean;
         isLiveGemini: boolean;
         lastActiveAt: Date;

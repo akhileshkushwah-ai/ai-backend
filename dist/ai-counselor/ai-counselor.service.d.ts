@@ -1,4 +1,12 @@
 import { FullStudentReport } from './data/dummy-student-report';
+export interface SabcqPhaseInfo {
+    id: string;
+    phaseNumber: number;
+    name: string;
+    durationMinutes: string;
+    focus: string;
+}
+export declare const SABCQ_PHASES: SabcqPhaseInfo[];
 export interface ActiveCounselorSession {
     sessionId: string;
     studentId: string;
@@ -16,7 +24,11 @@ export interface ActiveCounselorSession {
     }[];
     systemInstruction?: string;
     activeModelName?: string;
+    currentPhaseIndex: number;
+    currentPhase: SabcqPhaseInfo;
+    phaseTurnCount: number;
 }
+export declare function buildSabcqSystemInstruction(report: FullStudentReport, languagePreference?: string, currentPhase?: SabcqPhaseInfo): string;
 export declare class AiCounselorService {
     private readonly logger;
     private activeSessions;
@@ -30,6 +42,8 @@ export declare class AiCounselorService {
         message: string;
         isLiveGemini: boolean;
         ttlMinutes: number;
+        currentPhase: SabcqPhaseInfo;
+        totalPhasesCount: number;
         reportLoaded: {
             studentName: string;
             totalScoresCount: number;
@@ -41,6 +55,8 @@ export declare class AiCounselorService {
         sessionId: string;
         responseText: string;
         messageCount: number;
+        currentPhase: SabcqPhaseInfo;
+        totalPhasesCount: number;
         reportPayloadSentInThisRequest: boolean;
         isLiveGemini: boolean;
         lastActiveAt: Date;

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { WebSocket, Server } from 'ws';
-import { AiCounselorService } from './ai-counselor.service';
+import { AiCounselorService, buildSabcqSystemInstruction, SABCQ_PHASES } from './ai-counselor.service';
 import { DUMMY_STUDENT_REPORT } from './data/dummy-student-report';
 
 // NOTE: the service path is case-sensitive and must stay lowercase
@@ -89,23 +89,8 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
     this.closeGeminiSocket(client);
 
     const report = DUMMY_STUDENT_REPORT;
-    const formattedReport = this.counselorService.formatAssessmentContext(
-      report.studentAssessmentContext,
-    );
-
     const langPref = data?.languagePreference || 'hinglish';
-    const systemInstructionText = `
-You are Priya Sharma, a senior, warm, empathetic, and highly experienced AI Career Counselor at SABCQ.
-You MUST speak naturally like a real human career counselor in a 1-on-1 video call.
-Speak only in conversational ${langPref === 'hindi' ? 'Hindi' : 'Hinglish (a mix of Hindi and English written in Latin script)'}. Do not use any other language.
-
-CRITICAL INSTRUCTIONS ABOUT STUDENT ASSESSMENT REPORT:
-1. Student Name: ${report.studentName}
-2. You already have the complete assessment report in context. Never ask the student to repeat or re-send it.
-3. Assessment Context & Scores:
-${formattedReport}
-4. Personalise every answer using the scores above and keep spoken answers under 40 words so it sounds like natural conversation.
-    `.trim();
+    const systemInstructionText = buildSabcqSystemInstruction(report, langPref, SABCQ_PHASES[0]);
 
     const lastFailure = { message: 'unknown error' };
 
