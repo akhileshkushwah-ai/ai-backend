@@ -265,6 +265,29 @@ let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
             this.logger.warn(`Failed to forward text turn: ${err.message}`);
         }
     }
+    handleTriggerFirstIntro(client) {
+        const geminiWs = this.clientGeminiSockets.get(client);
+        if (!geminiWs || geminiWs.readyState !== ws_1.WebSocket.OPEN) {
+            this.sendToClient(client, {
+                event: 'error',
+                message: 'Live session is not connected.',
+            });
+            return;
+        }
+        const introPrompt = 'Please start the SABCQ session now by speaking the official SABCQ Grand Opening Introduction to the student as defined in your system prompt instruction.';
+        try {
+            geminiWs.send(JSON.stringify({
+                clientContent: {
+                    turns: [{ role: 'user', parts: [{ text: introPrompt }] }],
+                    turnComplete: true,
+                },
+            }));
+            this.logger.log('Triggered SABCQ Grand Opening Introduction on Gemini Live WS upon Mic interaction.');
+        }
+        catch (err) {
+            this.logger.warn(`Failed to trigger SABCQ Intro: ${err.message}`);
+        }
+    }
     handleInterrupt(client) {
         const geminiWs = this.clientGeminiSockets.get(client);
         if (geminiWs && geminiWs.readyState === ws_1.WebSocket.OPEN) {
@@ -308,6 +331,13 @@ __decorate([
     __metadata("design:paramtypes", [ws_1.WebSocket, Object]),
     __metadata("design:returntype", void 0)
 ], AiCounselorGateway.prototype, "handleTextTurn", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('trigger_first_intro'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [ws_1.WebSocket]),
+    __metadata("design:returntype", void 0)
+], AiCounselorGateway.prototype, "handleTriggerFirstIntro", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('interrupt'),
     __param(0, (0, websockets_1.ConnectedSocket)()),

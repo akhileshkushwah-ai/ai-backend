@@ -13,7 +13,7 @@ export class AiCounselorController {
   @Post('session/start')
   @HttpCode(HttpStatus.OK)
   async startSession(@Body() body: StartSessionDto) {
-    return this.counselorService.startCounselorSession(body.studentId, body.languagePreference);
+    return this.counselorService.startCounselorSession((body as any).customReport || undefined, body.studentId, body.languagePreference);
   }
 
   /**
@@ -23,6 +23,15 @@ export class AiCounselorController {
   @HttpCode(HttpStatus.OK)
   async sendMessage(@Body() body: SendMessageDto) {
     return this.counselorService.sendMessage(body.sessionId, body.message);
+  }
+
+  /**
+   * PURE VOICE-TO-VOICE COUNSELING: NATIVE GEMINI AUDIO STREAM
+   */
+  @Post('voice-chat')
+  @HttpCode(HttpStatus.OK)
+  async sendVoiceMessage(@Body() body: SendMessageDto) {
+    return this.counselorService.sendVoiceMessage(body.sessionId, body.message);
   }
 
   /**

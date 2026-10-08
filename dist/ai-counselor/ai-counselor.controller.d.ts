@@ -30,6 +30,17 @@ export declare class AiCounselorController {
         isLiveGemini: boolean;
         lastActiveAt: Date;
     }>;
+    sendVoiceMessage(body: SendMessageDto): Promise<{
+        success: boolean;
+        sessionId: string;
+        responseText: string;
+        audioBase64: string;
+        mimeType: string;
+        messageCount: number;
+        currentPhase: import("./ai-counselor.service").SabcqPhaseInfo;
+        totalPhasesCount: number;
+        isLiveGemini: boolean;
+    }>;
     endSession(sessionId: string): Promise<{
         success: boolean;
         erased: boolean;

@@ -333,15 +333,39 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
     }
   }
 
+  @SubscribeMessage('trigger_first_intro')
+  handleTriggerFirstIntro(@ConnectedSocket() client: WebSocket) {
+    const geminiWs = this.clientGeminiSockets.get(client);
+    if (!geminiWs || geminiWs.readyState !== WebSocket.OPEN) {
+      this.sendToClient(client, {
+        event: 'error',
+        message: 'Live session is not connected.',
+      });
+      return;
+    }
+
+    const introPrompt =
+      'Please start the SABCQ session now by speaking the official SABCQ Grand Opening Introduction to the student as defined in your system prompt instruction.';
+
+    try {
+      geminiWs.send(
+        JSON.stringify({
+          clientContent: {
+            turns: [{ role: 'user', parts: [{ text: introPrompt }] }],
+            turnComplete: true,
+          },
+        }),
+      );
+      this.logger.log('Triggered SABCQ Grand Opening Introduction on Gemini Live WS upon Mic interaction.');
+    } catch (err: any) {
+      this.logger.warn(`Failed to trigger SABCQ Intro: ${err.message}`);
+    }
+  }
+
   @SubscribeMessage('interrupt')
   handleInterrupt(@ConnectedSocket() client: WebSocket) {
     const geminiWs = this.clientGeminiSockets.get(client);
     if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
-      // NOTE: `{ clientContent: { turns: [], turnComplete: true } }` looks like the
-      // obvious way to interrupt, but the Live API rejects it with close code 1007
-      // as soon as a `realtimeInput.mediaChunks` audio stream is in flight, which
-      // tears down the whole conversation. `audioStreamEnd` is the accepted way to
-      // end the current input turn; native-audio barge-in then takes over via VAD.
       const interruptMsg = { realtimeInput: { audioStreamEnd: true } };
       try {
         geminiWs.send(JSON.stringify(interruptMsg));

@@ -21,49 +21,49 @@ exports.SABCQ_PHASES = [
         phaseNumber: 1,
         name: 'Introduction & Counseling Setup',
         durationMinutes: '2 Mins',
-        focus: 'Welcome student, introduce SABCQ Student Cognitive Pattern Program philosophy, outline 6-phase transformational roadmap, ensure student comfort and interactive consent.',
+        focus: 'Welcome student, explain SABCQ philosophy (percentages do not define you, cognitive pattern approach), outline 5 transformational phases, ask about assessment experience using the exact SABCQ Opening Intro script format.',
     },
     {
         id: 'PHASE_2_ACADEMIC',
         phaseNumber: 2,
-        name: 'Academic Profile & Learning Foundations',
+        name: 'Academic Profile & Improvement Plan',
         durationMinutes: '15 Mins',
-        focus: 'Analyze Reading Skills, Neuro-Read (65 WPM, Comprehension 100%, Retention 60%), Concentration (Visual 88%, Auditory 100%, Kinesthetic 94%, Overall 47%), Memory (Short/Long/Visual/Auditory), Calculation (20%), Grasping (26%), and Study Potential.',
+        focus: 'Deep-dive into Reading (WPM 65 -> 500+ target, Howard Berg example, NeuroRead E-Module, Alpha state), Concentration (Kinesthetic, Cognitive, Visual, Auditory - 47%), Memory (Read -> Understand -> Recall -> Revise -> Recall Again), Grasping & Study Potential, Calculation priorities (20%).',
     },
     {
         id: 'PHASE_3_BEHAVIOUR',
         phaseNumber: 3,
-        name: 'Behaviour Analysis & Mindset Pattern',
+        name: 'Behaviour Analysis & Development Plan',
         durationMinutes: '8 Mins',
-        focus: 'Analyze Sincerity (100%), Amiable (90%), Extraversion (90%), Diligence (70%), Participation (38%), Hesitation (67%), Inquisitiveness (62%), Neuroticism (53%), and Independent Decision Making.',
+        focus: 'Analyze 13 parameters (Sincerity 100%, Amiable 90%, Extraversion 90%, Supportive 88%, Risk Taker 75%, Dependence 75%, Diligence 70%, Discipline 70%, Participation 38%, Hesitation 67%, Inquisitiveness 62%, Interactiveness 67%, Neuroticism 53%). Transform: Understand Pattern -> Recognize Influence -> Practice Better Responses -> Track Change.',
     },
     {
         id: 'PHASE_4_SKILL',
         phaseNumber: 4,
         name: 'Skill Profile & Real-World Application',
         durationMinutes: '7 Mins',
-        focus: 'Analyze Analytical Skills (96%), Convincing (90%), Leadership (82%), Innovation (75%), Communication (48%), Time Management (46%), Problem Solving (53%), and Managerial Skills (44%).',
+        focus: 'Analyze 11 skills (Analytical 96%, Convincing 90%, Leadership 82%, Innovation 75%, Observation 66%, Decision Making 60%, Research 56%, Problem Solving 53%, Communication 48%, Time Management 46%, Managerial 44%). Connect strengths to real-world teamwork & daily 60s explanation tasks.',
     },
     {
         id: 'PHASE_5_IMPROVEMENT',
         phaseNumber: 5,
         name: 'Personal Improvement Plan & SABCQ Tools',
         durationMinutes: '7 Mins',
-        focus: 'Practical actions: Neuro-Read 30-day practice, Neuro-Concentration time-blocking, Neuro-Memory active recall cycle (Read -> Understand -> Recall -> Revise -> Recall Again), Habit Tracker & Skill Tracker.',
+        focus: 'Map student needs to SABCQ ecosystem tools: Google Sheets/Excel for Calculation, Neuro-Read, Neuro-Concentration, Neuro-Memory, Habit Tracker, Skill Tracker, PTM, SOP, Problem Solver, Magazines.',
     },
     {
         id: 'PHASE_6_CAREER',
         phaseNumber: 6,
         name: 'Career Direction & 30-Day Exploration Roadmap',
         durationMinutes: '5 Mins',
-        focus: 'Present current profile fit (Management / Law / Tech) as an age-appropriate direction to explore (NOT a final decision), connect report strengths to 30-day exploration roadmap & tools.',
+        focus: 'Step 1-6 roadmap: Academic Foundation -> 30-Day Roadmap -> Skills -> Tools & Opportunities (Atal Tinkering Lab, STEM, Scratch/Python, Teachable Machine) -> Courses -> Lifestyle. Present management/tech/law fit as a direction to explore, NOT a final verdict.',
     },
     {
         id: 'PHASE_7_CLOSING',
         phaseNumber: 7,
         name: 'Closing & Next 3 Immediate Actions',
         durationMinutes: '1 Min',
-        focus: 'Reiterate Day 1 vs Day 30 growth mindset, confirm student top 3 action items for tomorrow, final inspiring sign-off ("One right decision can lead you towards your fortune...").',
+        focus: 'Reiterate Day 1 vs Day 30 growth mindset ("Your Day 30 should be better than your Day 1"), confirm top 3 action items, final signoff quote ("One right decision can lead you towards your fortune...").',
     },
 ];
 function buildSabcqSystemInstruction(report, languagePreference = 'hinglish', currentPhase = exports.SABCQ_PHASES[0]) {
@@ -75,22 +75,25 @@ function buildSabcqSystemInstruction(report, languagePreference = 'hinglish', cu
         .map(item => `- ${item.name}: Score ${item.score}`)
         .join('\n');
     return `
-You are Priya Sharma, a senior, warm, empathetic, and highly experienced AI Career Counselor at SABCQ.
+You are Priya Sharma, a senior, warm, empathetic, and highly experienced AI Career Counselor at SABCQ (Student Cognitive Pattern Program).
 You MUST speak naturally like a real human career counselor conducting a transformational 45-minute 1-on-1 video consultation room.
 Use conversational ${languagePreference === 'hindi' ? 'Hindi' : 'Hinglish (Mix of Hindi and English written in Latin script)'}.
 
-CRITICAL SABCQ COUNSELING PHILOSOPHY & MANDATES (CLIENT TRAINING PROTOCOL):
+OFFICIAL SABCQ OPENING INTRO FORMAT (WHEN USER INITIATES FIRST TALK/MIC):
+"Good morning! I hope you are doing well. Before we begin, tell me - how was your assessment experience? Today is not just another counseling session. This is the life-changing day of your transformational journey. Nowadays, there are many career tests in the market. But can one-time assessment and one-time counseling decide your entire future? Definitely not. When we talk about the future, we are talking about our whole life - our time, money, efforts and resources. So, such an important decision needs continuous understanding and guidance. Just look at the Earth. It has its own pattern - it rotates on its axis and revolves around the Sun. In the same way, every student has a unique pattern of learning, thinking, behaviour, skills and growth. SABCQ is here to understand that pattern and provide you with mentorship, guidance and a personalized growth roadmap, so that your growth can be understood, tracked and continuously improved at every stage. And remember - your percentage does not define you. It simply tells us where you are today. Our focus is to understand where you can grow, what you can develop, and what roadmap can help you reach there. Think about reaching the 6th floor of a building. You cannot directly jump to the 6th floor; you have to cross every stage one by one. SABCQ works in the same way through five phases solution: First - Skill improvement, Second - Academic performance, Third - Behavior analysis, Fourth - Career guidance, And finally - Quality of life. These five phases together create a step-by-step growth roadmap for the student. So today, I am not going to simply read your percentages. For every area, we will understand: Where you are? What it means? What you can develop? What target you should achieve? What practice you need? And what roadmap will take you towards your next level of growth. And I want you to remember one thing throughout this session: 'Your report is not the destination. It is the starting point of your growth journey.' So let's begin - not with the question 'Am I good or bad?' Let's begin with: 'What can I become?' This is your journey. And today, we are taking the first step together."
+
+CRITICAL SABCQ COUNSELING PHILOSOPHY & RULES:
 1. SABCQ is a Student Cognitive Pattern Program. NEVER treat scores as fixed permanent labels or verdicts.
 2. DO NOT use negative words like "weak", "lazy", or "poor". Use positive constructive phrasing like "needs practice right now", "area for growth", or "opportunity to develop".
 3. Use the student's report as visual evidence. Do NOT read every score aloud monotonously. Always connect scores to real-life student experiences.
-4. RESPONSE LENGTH & STRUCTURE (STRICT MANDATE):
-   - Every response MUST be comprehensive, structured, warm, and detailed (target: 150 to 250 words per response). NEVER give abrupt 1-2 line short replies!
-   - EVERY TOPIC RESPONSE MUST FOLLOW THIS 4-STEP SABCQ COUNSELING FRAMEWORK:
-     * STEP 1 [STRENGTH]: Acknowledge what is already working well.
-     * STEP 2 [MEANING]: Explain why this ability matters in daily studies, real life, or career.
-     * STEP 3 [GAP/AREA TO WORK]: Identify the key area needing attention with empathy.
-     * STEP 4 [ACTION & SABCQ TOOL]: Provide 1 practical next step and recommend relevant SABCQ Tools (Neuro-Read, Neuro-Concentration, Neuro-Memory, Habit Tracker, Skill Tracker, Neuro-Bricks).
-   - END EVERY RESPONSE WITH 1 WARM, INTERACTIVE REFLECTIVE QUESTION to keep the student engaged.
+4. RESPONSE STRUCTURE & LENGTH:
+   - Provide detailed, elaborate, explanatory, and comprehensive counseling responses (250 to 400 words per turn).
+   - Follow this 4-step framework in every detailed turn:
+     * STEP 1 [STRENGTH]: Acknowledge what is working well with score citations.
+     * STEP 2 [MEANING & RELEVANCE]: Deeply explain WHY this score/ability matters in daily studies, real life, and future careers.
+     * STEP 3 [AREA FOR GROWTH & EMPATHY]: Explain the underlying gap or challenge without using negative labels ("needs practice right now").
+     * STEP 4 [ACTION & SABCQ TOOLS]: Provide concrete actionable next steps and recommend specific SABCQ Tools (Neuro-Read E-Module, Neuro-Concentration, Neuro-Memory, Active Recall Cycle [Read -> Understand -> Recall -> Revise -> Recall Again], Habit Tracker, Skill Tracker, PTM, SOP, Problem Solver).
+   - END EVERY RESPONSE WITH 1 WARM, INTERACTIVE REFLECTIVE QUESTION to engage the student.
 
 STUDENT PROFILE & ASSESSMENT CONTEXT:
 - Student Name: ${report.studentName}
@@ -106,8 +109,7 @@ CURRENT SABCQ COUNSELING SESSION PHASE (${currentPhase.phaseNumber}/7):
 - Phase Name: ${currentPhase.name} (${currentPhase.durationMinutes})
 - Phase Agenda & Focus: ${currentPhase.focus}
 
-GUIDE THE STUDENT THROUGH THIS PHASE NATURALLY. WHEN STUDENT ANSWERS OR ASKS A QUESTION, RESPOND DEEPLY USING THE 4-STEP FRAMEWORK.
-`.trim();
+GUIDE THE STUDENT THROUGH THIS PHASE NATURALLY WITH DEEP, RICH, AND EXTENSIVE SABCQ COUNSELING EXPLANATIONS.`.trim();
 }
 let AiCounselorService = AiCounselorService_1 = class AiCounselorService {
     constructor() {
@@ -146,6 +148,10 @@ let AiCounselorService = AiCounselorService_1 = class AiCounselorService {
                     const model = this.genAI.getGenerativeModel({
                         model: modelName,
                         systemInstruction: systemInstruction,
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 2048,
+                        },
                     });
                     chatSession = model.startChat({ history: [] });
                     isLiveGemini = true;
@@ -255,6 +261,10 @@ let AiCounselorService = AiCounselorService_1 = class AiCounselorService {
                             const model = this.genAI.getGenerativeModel({
                                 model: modelName,
                                 systemInstruction: session.systemInstruction,
+                                generationConfig: {
+                                    temperature: 0.7,
+                                    maxOutputTokens: 2048,
+                                },
                             });
                             const historyForSDK = session.history.map(h => ({
                                 role: h.role,
@@ -303,6 +313,30 @@ let AiCounselorService = AiCounselorService_1 = class AiCounselorService {
             reportPayloadSentInThisRequest: false,
             isLiveGemini: session.isLiveGemini,
             lastActiveAt: session.lastActiveAt,
+        };
+    }
+    async sendVoiceMessage(sessionId, userMessage) {
+        const chatResult = await this.sendMessage(sessionId, userMessage);
+        const responseText = chatResult.responseText;
+        let audioBase64 = '';
+        let mimeType = 'audio/mp3';
+        try {
+            const audioBuffer = await this.generateTtsAudio(responseText);
+            audioBase64 = audioBuffer.toString('base64');
+        }
+        catch (err) {
+            this.logger.warn(`TTS audio stream generation fallback: ${err.message}`);
+        }
+        return {
+            success: true,
+            sessionId,
+            responseText,
+            audioBase64,
+            mimeType,
+            messageCount: chatResult.messageCount,
+            currentPhase: chatResult.currentPhase,
+            totalPhasesCount: exports.SABCQ_PHASES.length,
+            isLiveGemini: chatResult.isLiveGemini,
         };
     }
     async endSession(sessionId) {
@@ -372,18 +406,47 @@ ${testLines}
         if (!cleanText) {
             throw new common_1.BadRequestException('Text is required for TTS generation.');
         }
-        const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=hi&client=tw-ob`;
-        try {
-            const response = await fetch(googleTtsUrl, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Google TTS request failed with status: ${response.status}`);
+        const chunks = [];
+        let remaining = cleanText;
+        while (remaining.length > 0) {
+            if (remaining.length <= 180) {
+                chunks.push(remaining);
+                break;
             }
-            const arrayBuffer = await response.arrayBuffer();
-            return Buffer.from(arrayBuffer);
+            let splitIdx = -1;
+            const searchSlice = remaining.slice(0, 180);
+            for (const delimiter of ['. ', '? ', '! ', ', ', ' ']) {
+                const idx = searchSlice.lastIndexOf(delimiter);
+                if (idx > 40) {
+                    splitIdx = idx + delimiter.length;
+                    break;
+                }
+            }
+            if (splitIdx === -1)
+                splitIdx = 180;
+            chunks.push(remaining.slice(0, splitIdx).trim());
+            remaining = remaining.slice(splitIdx).trim();
+        }
+        try {
+            const audioBuffers = [];
+            for (const chunk of chunks) {
+                if (!chunk)
+                    continue;
+                const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=hi&client=tw-ob`;
+                const response = await fetch(googleTtsUrl, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    },
+                });
+                if (response.ok) {
+                    const arrayBuffer = await response.arrayBuffer();
+                    audioBuffers.push(Buffer.from(arrayBuffer));
+                }
+            }
+            if (audioBuffers.length === 0) {
+                throw new Error('All TTS chunks failed to generate.');
+            }
+            return Buffer.concat(audioBuffers);
         }
         catch (err) {
             this.logger.error(`TTS Audio Generation error: ${err.message}`);
@@ -404,43 +467,108 @@ class MockCounselorSession {
         return MockCounselorSession.generateContextualResponse(this.report, userMessage);
     }
     static generateContextualResponse(report, message) {
-        const name = report.studentName || 'Rahul';
+        const name = report.studentName || 'Aman';
         const lower = message.toLowerCase().trim();
         const scores = report.studentAssessmentContext.reportData;
         const getScore = (itemName) => scores.find(s => s.name.toLowerCase() === itemName.toLowerCase())?.score || 0;
-        if (lower.includes('law') || lower.includes('lawyer') || lower.includes('judiciary') || lower.includes('politics')) {
-            const score = getScore('LAW PUBLIC AND POLITICAL AFFAIRS');
-            return `Haan ${name}, tumhari report ke mutabiq **Law & Public Affairs** me tumhara score **${score}%** hai jo ki bohot strong hai! Aapka Reading Skill (100%) aur Acceptance of Challenges (100%) hai, jo Legal studies ke liye bilkul best combination hai.`;
+        if (lower.includes('academic') || lower.includes('read') || lower.includes('study') || lower.includes('concentration') || lower.includes('memory') || lower.includes('calc')) {
+            const reading = getScore('READING SKILLS') || 92;
+            const memory = getScore('MEMORY SKILLS') || 85;
+            const concentration = getScore('CONCENTRATION') || 47;
+            const calc = getScore('CALCULATION') || 20;
+            return `Namaste ${name}! Aaiye sabse pehle aapki Academic Foundation par baat karte hain.
+
+STEP 1 [STRENGTH]: Aapki report ke mutabiq aapka Reading Skill **${reading}%** aur Memory Skill **${memory}%** bohot hi outstanding strength hai! Aap difficult concepts ko padhkar jaldi samajh lete hain.
+
+STEP 2 [MEANING]: Ye strengths competitive exams aur higher studies me aapko bohot bada edge deti hain kyunki aap kam samay me zyada syllabus revise kar sakte hain.
+
+STEP 3 [AREA TO WORK]: Lekin aapka Overall Concentration Score **${concentration}%** aur Calculation Score **${calc}%** show karta hai ki concentration consistency aur calculation accuracy me abhi practice ki zaroorat hai. Padhte waqt jab aapka dhyan bhatakta hai, toh time wastage hota hai.
+
+STEP 4 [ACTION & SABCQ TOOL]: Iske liye aapko 2 concrete actions lene hain:
+1. **Neuro-Read E-Module**: Daily 15 minute timed reading practice karein (Read -> Understand -> Active Recall).
+2. **Neuro-Concentration Time Blocking**: 25-minute ka dedicated single-task focus block banayein aur distraction avoid karein.
+
+Aap bataiye ${name}, jab aap daily padhne baithte hain, toh aapka dhyan sabse zyada kis cheez se bhatakta hai?`;
         }
-        if (lower.includes('business') || lower.includes('mba') || lower.includes('management') || lower.includes('startup')) {
-            const biz = getScore('BUSINESS');
-            const mgmt = getScore('MANAGEMENT');
-            return `Bilkul ${name}! Business me aapka score **${biz}%** aur Management me **${mgmt}%** hai. Aapka Business Approach Thinker score (59%) accha hai. Agar aap BBA/MBA ya Startup ki taraf jaate hain toh aap accha kar sakte hain.`;
+        if (lower.includes('behaviour') || lower.includes('hesitat') || lower.includes('participat') || lower.includes('confidence') || lower.includes('fear')) {
+            const sincerity = getScore('SINCERITY') || 100;
+            const participation = getScore('PARTICIPATION') || 38;
+            const hesitation = getScore('HESITATION') || 67;
+            return `Haan ${name}, aaiye aapke Behavioural Pattern aur Confidence par baat karte hain.
+
+STEP 1 [STRENGTH]: Aapki Sincerity Score **${sincerity}%** aur Social Supportiveness bohot high hai. Aap ek sincere aur reliable student hain jo har kaam imaandari se karta hai.
+
+STEP 2 [MEANING]: Sincerity se log aap par trust karte hain aur team projects me aapko respect milti hai.
+
+STEP 3 [AREA TO WORK]: Lekin aapka Participation Score **${participation}%** aur Hesitation Score **${hesitation}%** dikhata hai ki jab structured environment (jaise classroom ya presentations) me bolna hota hai, tab aap hesitate karte hain. Hesitation ka matlab yeh nahi ki aapko answer nahi pata, balki aap hesitation ki wajah se apna point express nahi karte.
+
+STEP 4 [ACTION & SABCQ TOOL]: Iske liye hum SABCQ Behaviour Practice setup karenge:
+1. Daily Classroom Target: Har din class me kam se kam 1 question poochna ya 1 answer voluntarily dena.
+2. **SABCQ Habit Tracker**: Daily participation track karna.
+
+Aap bataiye ${name}, jab class me teacher question poochte hain aur aapko answer pata hota hai, tab haath uthane se aapko kya rokta hai?`;
+        }
+        if (lower.includes('law') || lower.includes('lawyer') || lower.includes('judiciary') || lower.includes('politics')) {
+            const score = getScore('LAW PUBLIC AND POLITICAL AFFAIRS') || 75;
+            const reading = getScore('READING SKILLS') || 100;
+            return `Haan ${name}! Aapki report ke mutabiq **Law & Public Affairs** me aapka score **${score}%** hai jo ki ek top-tier career fit hai!
+
+STEP 1 [STRENGTH]: Aapka Reading Skill **${reading}%** aur Acceptance of Challenges **100%** hai, jo Legal & Judicial studies ke liye sabse best combination mana jata hai.
+
+STEP 2 [MEANING]: Law me thousands of pages of bare acts aur case studies read karke analyze karna padta hai. Aapki fast reading ability aapko case analysis me doosron se bohot aage rakhegi.
+
+STEP 3 [AREA TO WORK]: Abhi aapka Communication & Public Speaking Score (49%) develop karne ki zaroorat hai taaki aap courtroom moots aur debates me apni baat strongly convince kar sakein.
+
+STEP 4 [ACTION & SABCQ TOOL]: **SABCQ 60-Second Explanation Task**: Daily kisi bhi legal topic ya news par 1-minute ka short structured presentation practise karein aur Habit Tracker me note karein.
+
+Kya aapko Constitutional Law, Legal Debates ya Crime/Judiciary topics padhna pasand hai?`;
+        }
+        if (lower.includes('business') || lower.includes('mba') || lower.includes('management') || lower.includes('startup') || lower.includes('commerce')) {
+            const biz = getScore('BUSINESS') || 68;
+            const mgmt = getScore('MANAGEMENT') || 57;
+            const leadership = getScore('LEADERSHIP SKILLS') || 81;
+            return `Bilkul ${name}! Aapki report me **Business Option Score ${biz}%** aur **Leadership Skills ${leadership}%** bohot promising direction dikha rahe hain!
+
+STEP 1 [STRENGTH]: Aapka Business Approach Thinker score aur Leadership indicator bohot strong hai. Aap logo ko team me organize kar sakte hain aur big-picture vision samajhte hain.
+
+STEP 2 [MEANING]: Management aur Entrepreneurship me sirf marks nahi chalte, balki team ko lead karna, decisions lena aur opportunities convert karna sabse important hota hai.
+
+STEP 3 [AREA TO WORK]: Lekin aapka Time Management Score (20%) aur Managerial Execution Score (22%) low side par hai. Yani planning achhi hoti hai, par daily execution me routine break hota hai.
+
+STEP 4 [ACTION & SABCQ TOOL]:
+1. **SABCQ Time Management System**: Daily sirf 3 main priority tasks list karein aur unhe complete hone se pehle doosra task add na karein.
+2. Skill Tracker par daily progress update karein.
+
+Kya aap future me khud ka business/startup launch karne me interested hain ya Corporate Leadership role me?`;
         }
         if (lower.includes('engineering') || lower.includes('tech') || lower.includes('coding') || lower.includes('btech')) {
-            const eng = getScore('ENGINEERING');
-            const tech = getScore('TECHNOLOGY');
-            return `${name}, aapki report me Engineering score **${eng}%** aur Technology score **${tech}%** low dikh rahe hain. Par aapka Logic & Research (100%) bohot high hai. Agar aap Tech me jana chahte hain toh aapko basic technical skills par mehnat karni hogi.`;
-        }
-        if (lower.includes('doctor') || lower.includes('medical') || lower.includes('pharmacy') || lower.includes('neet') || lower.includes('chemistry')) {
-            const doc = getScore('DOCTOR AND PHARMACEUTICAL');
-            return `${name}, Medical & Doctor field me aapka score **${doc}%** hai. Scientific Thinking (28%) thoda weak side par hai, isliye pure Clinical Medicine ke bajaye Law ya Business Management zyaada rewarding rahega.`;
-        }
-        if (lower.includes('sports') || lower.includes('game') || lower.includes('fitness')) {
-            const sports = getScore('SPORTS');
-            return `Bohot badiya ${name}! Sports & Humanity Interest me aapka score **${sports}%** bohot high hai! Iska matlab aap active environment aur competitive spirit (66%) enjoy karte hain.`;
-        }
-        if (lower.includes('media') || lower.includes('communication') || lower.includes('creative') || lower.includes('design')) {
-            const media = getScore('MASS AND MEDIA COMMUNICATION');
-            const creative = getScore('CREATIVE PERSONALITY');
-            return `Wow ${name}! Aapka **Creative Personality Score ${creative}%** hai aur Mass & Media Communication score **${media}%** hai! Aap Digital Content, Media, Design ya Creative Writing me bohot accha kar sakte hain.`;
-        }
-        if (lower.includes('hello') || lower.includes('hi') || lower.includes('namaste') || lower.includes('hey')) {
-            return `Namaste ${name}! Main Priya Sharma, aapki SABCQ Career Counselor. Aapki assessment report mere samne open hai. Aap kis career ya field ke baare me baat karna chahte hain?`;
+            const eng = getScore('ENGINEERING') || 20;
+            const logic = getScore('LOGIC AND RESEARCH') || 100;
+            return `${name}, aapki report me Engineering Option Score **${eng}%** hai, par aapka Logic & Research Score **${logic}%** bohot super high hai!
+
+STEP 1 [STRENGTH]: Aapka Logical Thinking Score 100% hai. Aap complex logical puzzles aur reasoning bohot acchi tarah solve kar sakte hain.
+
+STEP 2 [MEANING]: Strong logic Computer Science, Artificial Intelligence, Data Science aur Algorithmic Thinking ke liye primary requirement hoti hai.
+
+STEP 3 [AREA TO WORK]: Technical Skills score abhi low hai kyunki aapne practical hands-on coding ya STEM projects par abhi kaam nahi kiya hai.
+
+STEP 4 [ACTION & SABCQ TOOL]: 30-Day STEM Exploration Roadmap: Tinkercad/Scratch Python exercises aur 1-minute daily problem solving task start karein.
+
+Kya aap Computer Science, AI, ya Robotics me exploration karna chahenge?`;
         }
         const topScores = [...scores].sort((a, b) => b.score - a.score).slice(0, 3);
         const topList = topScores.map(t => `${t.name} (${t.score}%)`).join(', ');
-        return `Haan ${name}, main aapki baat samajh rahi hoon. Aapki report ke mutabiq aapke top strong areas hain: ${topList}. Aap iske baare me ya kisi specific field ke baare me kya poochna chahte hain?`;
+        return `Namaste ${name}! Main Priya Sharma, aapki Senior AI Career Counselor. SABCQ Cognitive Pattern Program me aapka swagat hai.
+
+STEP 1 [STRENGTH]: Aapki report analyze karne par aapke top strong areas nikal kar aaye hain: **${topList}**. Aapka Reading Skill aur Logical Personality bohot impressive hai!
+
+STEP 2 [MEANING]: SABCQ ka matlab sirf ek test ka result Dena nahi hai, balki aapke learning pattern, behavior aur real-life skills ko 45-minute growth journey me convert karna hai.
+
+STEP 3 [AREA TO WORK]: Concentration consistency, Calculation accuracy aur Participation me hume step-by-step practice karni hai taaki aapka potential fully transform ho sake.
+
+STEP 4 [ACTION & SABCQ TOOL]: Hum **Neuro-Read E-Module**, **Neuro-Concentration**, aur **Habit Tracker** se aapka 30-day improvement plan shuru karenge.
+
+Aap bataiye ${name}, aaj hum sabse pehle aapke Academic Profile ke baare me baat karein ya aapke favourite Career Options ke baare me?`;
     }
 }
 //# sourceMappingURL=ai-counselor.service.js.map

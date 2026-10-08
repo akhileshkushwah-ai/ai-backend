@@ -23,5 +23,6 @@ export declare class AiCounselorGateway implements OnGatewayConnection, OnGatewa
     handleTextTurn(client: WebSocket, data: {
         text?: string;
     } | string): void;
+    handleTriggerFirstIntro(client: WebSocket): void;
     handleInterrupt(client: WebSocket): void;
 }
