@@ -139,6 +139,7 @@ let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
                             speechConfig: {
                                 voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_NAME } },
                             },
+                            temperature: 0.35,
                         },
                         systemInstruction: { parts: [{ text: systemInstructionText }] },
                     },

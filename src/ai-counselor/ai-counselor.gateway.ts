@@ -174,11 +174,11 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
           setup: {
             model: modelName,
             generationConfig: {
-              // Native-audio live models reject ["AUDIO","TEXT"] with 1007.
               responseModalities: ['AUDIO'],
               speechConfig: {
                 voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_NAME } },
               },
+              temperature: 0.35,
             },
             systemInstruction: { parts: [{ text: systemInstructionText }] },
           },
