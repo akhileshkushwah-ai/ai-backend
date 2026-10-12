@@ -24,7 +24,7 @@ const GEMINI_LIVE_MODELS = [
     'models/gemini-2.5-flash-native-audio-preview-12-2025',
     'models/gemini-2.5-flash-native-audio-preview-09-2025',
 ];
-const VOICE_NAME = 'Aoede';
+const VOICE_NAME = process.env.GEMINI_VOICE_NAME || 'Kore';
 const HANDSHAKE_TIMEOUT_MS = 10000;
 let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
     constructor(counselorService) {
@@ -139,7 +139,7 @@ let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
                             speechConfig: {
                                 voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_NAME } },
                             },
-                            temperature: 0.35,
+                            temperature: 0.65,
                         },
                         systemInstruction: { parts: [{ text: systemInstructionText }] },
                     },
@@ -275,7 +275,7 @@ let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
             });
             return;
         }
-        const introPrompt = 'Please start the SABCQ session now by speaking the official SABCQ Grand Opening Introduction to the student as defined in your system prompt instruction.';
+        const introPrompt = 'Please speak now to welcome the student. Start with a warm "Good morning!", then take a gentle 1.2-second pause, and deliver the official SABCQ Opening Introduction at a calm, relaxed, unhurried human pace with natural breathing pauses.';
         try {
             geminiWs.send(JSON.stringify({
                 clientContent: {
