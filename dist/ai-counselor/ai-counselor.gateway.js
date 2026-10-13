@@ -275,7 +275,7 @@ let AiCounselorGateway = AiCounselorGateway_1 = class AiCounselorGateway {
             });
             return;
         }
-        const introPrompt = 'Please speak now to welcome the student. Start with a warm "Good morning!", then take a gentle 1.2-second pause, and deliver the official SABCQ Opening Introduction at a calm, relaxed, unhurried human pace with natural breathing pauses.';
+        const introPrompt = 'Please speak now to welcome the student. Start with a warm "Good morning. ...", then take a gentle pause, and deliver the official SABCQ Opening Introduction at a calm, relaxed, unhurried human pace with natural breathing pauses and line breaks as defined in your instructions.';
         try {
             geminiWs.send(JSON.stringify({
                 clientContent: {
