@@ -10,6 +10,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { WebSocket, Server } from 'ws';
 import { AiCounselorService, buildSabcqSystemInstruction, SABCQ_PHASES } from './ai-counselor.service';
+import { ACADEMIC_MILESTONES } from './frameworks/academic-phase.framework';
 import { DUMMY_STUDENT_REPORT } from './data/dummy-student-report';
 
 // NOTE: the service path is case-sensitive and must stay lowercase
@@ -27,6 +28,16 @@ const GEMINI_LIVE_MODELS = [
 const VOICE_NAME = process.env.GEMINI_VOICE_NAME || 'Kore';
 const HANDSHAKE_TIMEOUT_MS = 10000;
 
+interface ClientCounselingState {
+  currentPhase: number;
+  currentMilestoneIndex: number;
+  totalTurnCount: number;
+  milestoneTurnCount: number;
+  milestoneStartedAt: number;
+  phaseStartedAt: number;
+  wasInterrupted: boolean;
+}
+
 @WebSocketGateway({ path: '/ws/live-counselor', cors: { origin: '*' } })
 export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(AiCounselorGateway.name);
@@ -36,16 +47,28 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
 
   // Active client sockets mapped to their Gemini Live WS sessions
   private clientGeminiSockets = new Map<WebSocket, WebSocket>();
+  // Active client counseling milestone state
+  private clientCounselingStates = new Map<WebSocket, ClientCounselingState>();
 
   constructor(private readonly counselorService: AiCounselorService) {}
 
   handleConnection(client: WebSocket) {
     this.logger.log('Client connected to Live Counselor WebSocket');
+    this.clientCounselingStates.set(client, {
+      currentPhase: 1,
+      currentMilestoneIndex: 0,
+      totalTurnCount: 0,
+      milestoneTurnCount: 0,
+      milestoneStartedAt: Date.now(),
+      phaseStartedAt: Date.now(),
+      wasInterrupted: false,
+    });
   }
 
   handleDisconnect(client: WebSocket) {
     this.logger.log('Client disconnected from Live Counselor WebSocket');
     this.closeGeminiSocket(client);
+    this.clientCounselingStates.delete(client);
   }
 
   /**
@@ -264,10 +287,78 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
     }
 
     if (serverContent.interrupted) {
+      const state = this.clientCounselingStates.get(client);
+      if (state) {
+        state.wasInterrupted = true;
+      }
       this.sendToClient(client, { event: 'interrupted' });
     }
 
     if (serverContent.turnComplete) {
+      const state = this.clientCounselingStates.get(client);
+      if (state) {
+        // If this turn was aborted/interrupted by a barge-in, do NOT advance conversation counters or milestones!
+        if (state.wasInterrupted) {
+          state.wasInterrupted = false;
+          const currentMilestone = state.currentPhase === 2 ? ACADEMIC_MILESTONES[state.currentMilestoneIndex] : null;
+          this.sendToClient(client, {
+            event: 'turn_complete',
+            phaseNumber: state.currentPhase,
+            phaseName: state.currentPhase === 2 ? 'Academic Profile & Improvement Plan' : SABCQ_PHASES[state.currentPhase - 1]?.name || 'Active Phase',
+            milestoneId: currentMilestone?.id,
+            milestoneName: currentMilestone?.name,
+            milestonePart: currentMilestone?.part,
+            targetDuration: currentMilestone?.targetDuration,
+          });
+          return;
+        }
+
+        state.totalTurnCount++;
+
+        // Turn 1 completes: Grand Opening Intro finished, start Phase 2 (Academic Foundation)
+        if (state.totalTurnCount === 1) {
+          state.currentPhase = 2;
+          state.currentMilestoneIndex = 0; // ACADEMIC_1_INTRO_SEQUENCE
+          state.milestoneTurnCount = 0;
+          state.milestoneStartedAt = Date.now();
+          state.phaseStartedAt = Date.now();
+          this.logger.log('SABCQ Phase 1 Intro completed. Entered Phase 2: Academic Profile & Improvement Plan.');
+        } else if (state.currentPhase === 2) {
+          state.milestoneTurnCount++;
+
+          // Each milestone represents a rich, interactive beat.
+          // SABCQ counseling requirement: AI speaks & asks check-in question -> Student responds -> AI clarifies/transitions.
+          // Minimum 2 completed turns required per milestone before advancing to next academic topic.
+          const REQUIRED_TURNS_PER_MILESTONE = 2;
+          const timeOnMilestoneSec = (Date.now() - state.milestoneStartedAt) / 1000;
+
+          if (
+            state.milestoneTurnCount >= REQUIRED_TURNS_PER_MILESTONE &&
+            state.currentMilestoneIndex < ACADEMIC_MILESTONES.length - 1
+          ) {
+            state.currentMilestoneIndex++;
+            state.milestoneTurnCount = 0;
+            state.milestoneStartedAt = Date.now();
+            const nextMilestone = ACADEMIC_MILESTONES[state.currentMilestoneIndex];
+            this.logger.log(
+              `Advancing to Academic Milestone ${state.currentMilestoneIndex + 1}/${ACADEMIC_MILESTONES.length}: "${nextMilestone.name}" (Time on previous: ${timeOnMilestoneSec.toFixed(0)}s)`,
+            );
+          }
+        }
+
+        const milestone = state.currentPhase === 2 ? ACADEMIC_MILESTONES[state.currentMilestoneIndex] : null;
+
+        this.sendToClient(client, {
+          event: 'turn_complete',
+          phaseNumber: state.currentPhase,
+          phaseName: state.currentPhase === 2 ? 'Academic Profile & Improvement Plan' : SABCQ_PHASES[state.currentPhase - 1]?.name || 'Active Phase',
+          milestoneId: milestone?.id,
+          milestoneName: milestone?.name,
+          milestonePart: milestone?.part,
+          targetDuration: milestone?.targetDuration,
+        });
+        return;
+      }
       this.sendToClient(client, { event: 'turn_complete' });
     }
   }
@@ -345,7 +436,7 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
     }
 
     const introPrompt =
-      'Please speak now to welcome the student. Start with a warm "Good morning. ...", then take a gentle pause, and deliver the official SABCQ Opening Introduction at a calm, relaxed, unhurried human pace with natural breathing pauses and line breaks as defined in your instructions.';
+      'Please speak now to welcome the student. Start with a warm "Good morning. ...", then take a gentle pause, and deliver the official SABCQ Opening Introduction at a calm, relaxed, unhurried human pace with natural breathing pauses and line breaks as defined in your instructions. Crucial pronunciation rule: Pronounce the name SABCQ as "सब सी क्यू" (sab-see-q) — NEVER spell it out letter-by-letter as ess-ay-bee-see-kyoo.';
 
     try {
       geminiWs.send(
@@ -364,6 +455,10 @@ export class AiCounselorGateway implements OnGatewayConnection, OnGatewayDisconn
 
   @SubscribeMessage('interrupt')
   handleInterrupt(@ConnectedSocket() client: WebSocket) {
+    const state = this.clientCounselingStates.get(client);
+    if (state) {
+      state.wasInterrupted = true;
+    }
     const geminiWs = this.clientGeminiSockets.get(client);
     if (geminiWs && geminiWs.readyState === WebSocket.OPEN) {
       const interruptMsg = { realtimeInput: { audioStreamEnd: true } };

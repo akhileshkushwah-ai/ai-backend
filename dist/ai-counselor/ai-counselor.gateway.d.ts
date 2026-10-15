@@ -6,6 +6,7 @@ export declare class AiCounselorGateway implements OnGatewayConnection, OnGatewa
     private readonly logger;
     server: Server;
     private clientGeminiSockets;
+    private clientCounselingStates;
     constructor(counselorService: AiCounselorService);
     handleConnection(client: WebSocket): void;
     handleDisconnect(client: WebSocket): void;

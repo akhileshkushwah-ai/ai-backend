@@ -19,17 +19,6 @@ export declare class AiCounselorController {
             topScores: import("./data/dummy-student-report").ReportDataItem[];
         };
     }>;
-    sendMessage(body: SendMessageDto): Promise<{
-        success: boolean;
-        sessionId: string;
-        responseText: string;
-        messageCount: number;
-        currentPhase: import("./ai-counselor.service").SabcqPhaseInfo;
-        totalPhasesCount: number;
-        reportPayloadSentInThisRequest: boolean;
-        isLiveGemini: boolean;
-        lastActiveAt: Date;
-    }>;
     sendVoiceMessage(body: SendMessageDto): Promise<{
         success: boolean;
         sessionId: string;

@@ -30,6 +30,6 @@ async function bootstrap() {
   await app.listen(port);
   logger.log(`🚀 SABCQ AI Counselor NestJS Backend running on: http://localhost:${port}`);
   logger.log(`📌 Session Start API: POST http://localhost:${port}/api/v1/ai-counselor/session/start`);
-  logger.log(`📌 Chat API: POST http://localhost:${port}/api/v1/ai-counselor/chat`);
+  logger.log(`🎙️ Real-time Voice WebSocket: ws://localhost:${port}/ws/live-counselor`);
 }
 bootstrap();

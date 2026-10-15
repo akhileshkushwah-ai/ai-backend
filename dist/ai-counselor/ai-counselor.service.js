@@ -15,20 +15,21 @@ exports.buildSabcqSystemInstruction = buildSabcqSystemInstruction;
 const common_1 = require("@nestjs/common");
 const generative_ai_1 = require("@google/generative-ai");
 const dummy_student_report_1 = require("./data/dummy-student-report");
+const academic_phase_framework_1 = require("./frameworks/academic-phase.framework");
 exports.SABCQ_PHASES = [
     {
         id: 'PHASE_1_INTRO',
         phaseNumber: 1,
         name: 'Introduction & Counseling Setup',
         durationMinutes: '2 Mins',
-        focus: 'Welcome student, explain SABCQ philosophy (percentages do not define you, cognitive pattern approach), outline 5 transformational phases, ask about assessment experience using the exact SABCQ Opening Intro script format.',
+        focus: 'Welcome student, explain SABCQ philosophy (percentages do not define you, cognitive pattern approach), outline 5 transformational phases, ask about assessment experience using the exact SABCQ Opening Intro script format (pronounce SABCQ as सब सी क्यू).',
     },
     {
         id: 'PHASE_2_ACADEMIC',
         phaseNumber: 2,
         name: 'Academic Profile & Improvement Plan',
         durationMinutes: '15 Mins',
-        focus: 'Deep-dive into Reading (WPM 65 -> 500+ target, Howard Berg example, NeuroRead E-Module, Alpha state), Concentration (Kinesthetic, Cognitive, Visual, Auditory - 47%), Memory (Read -> Understand -> Recall -> Revise -> Recall Again), Grasping & Study Potential, Calculation priorities (20%).',
+        focus: 'Part A (9 Mins): Reading Sequence (65 WPM -> 500+ WPM, Howard Berg, NeuroRead E-Module, Director Mr. Vicky Jaiswal Sir vision, Alpha state), Concentration (Visual 88%, Auditory 100%, Kinesthetic 94%, Cognitive 100% vs 47% consistency, ONE TARGET -> ONE TIME BLOCK -> ONE TASK), Memory (Encoding, storage, retrieval, Read -> Understand -> Recall -> Revise -> Recall Again, "What can I recall without looking?"), Grasping & SABCQ Unique Cognitive Profile. Part B (6 Mins): 30-Day NeuroRead Roadmap ("Your Day 30 should be better than your Day 1"), Concentration E-Module, Memory E-Module, Daily Habit Tracker, Support tiers (AI -> Live -> 1-on-1), Golden transition question.',
     },
     {
         id: 'PHASE_3_BEHAVIOUR',
@@ -89,6 +90,11 @@ Your voice is powered by a native audio engine. To ensure your voice remains cal
    - Use ellipses (...) for thoughtful, reflective pauses.
    - Use periods (.) followed by a clear paragraph break for full breathing pauses.
 
+### 🗣️ CRITICAL SPOKEN PRONUNCIATION RULE FOR "SABCQ" (MANDATORY IN ALL AUDIO/VOICE):
+- Spoken Hindi/Hinglish speech me app aur program ka naam letter-by-letter (ess-ay-bee-see-kyoo / एस-ए-बी-सी-क्यू) KABHI NAHI bolna hai.
+- Isko hamesha phonetically "सब सी क्यू" (sab-see-q) bolna aur pronounce karna hai.
+- In every spoken turn, dialogue, and introduction, pronounce the name naturally as "सब सी क्यू" (sab-see-q).
+
 ### 📋 STRUCTURE FOR THE INTRODUCTION
 When introducing yourself to a student, you must break your response into small, digestible, and well-paced beats. Use the exact structural pattern below:
 - [Friendly Greeting] ... (Brief pause)
@@ -102,6 +108,7 @@ When introducing yourself to a student, you must break your response into small,
 - NEVER use overly formal or robotic transitions.
 - DO NOT speak fast. Read the text in a slow, grounded, and comforting cadence.
 - Avoid using exclamation marks (!) as they artificially spike the audio engine's pitch, leading to rapid vocal fatigue later in the sentence. Use periods instead.
+- NEVER spell out S-A-B-C-Q letter-by-letter as ess-ay-bee-see-kyoo. Always pronounce it as "सब सी क्यू" (sab-see-q).
 
 OFFICIAL SABCQ OPENING INTRO FORMAT (WHEN USER INITIATES FIRST TALK/MIC):
 "Good morning. ...
@@ -109,11 +116,11 @@ I hope you are doing well today. Before we begin, tell me — how was your asses
 
 Today is the life-changing day of your transformational journey. Every student has a unique pattern of learning, thinking, behaviour, skills, and growth.
 
-SABCQ is here to understand your pattern and provide you with mentorship and a personalized growth roadmap... so that your growth can be tracked and continuously improved at every stage.
+सब सी क्यू (sab-see-q) is here to understand your pattern and provide you with mentorship and a personalized growth roadmap... so that your growth can be tracked and continuously improved at every stage.
 
 And remember — your percentage does not define you. It simply tells us where you are today.
 
-SABCQ works through a 5-phase growth roadmap.
+सब सी क्यू (sab-see-q) works through a 5-phase growth roadmap.
 First — Skill Improvement...
 Second — Academic Performance...
 Third — Behavior Analysis...
@@ -152,6 +159,8 @@ ${testLines}
 CURRENT SABCQ COUNSELING SESSION PHASE (${currentPhase.phaseNumber}/7):
 - Phase Name: ${currentPhase.name} (${currentPhase.durationMinutes})
 - Phase Agenda & Focus: ${currentPhase.focus}
+
+${(0, academic_phase_framework_1.buildAcademicMasterProtocol)(report, languagePreference)}
 
 GUIDE THE STUDENT THROUGH THIS PHASE NATURALLY WITH DEEP, RICH, AND EXTENSIVE SABCQ COUNSELING EXPLANATIONS.`.trim();
 }
@@ -450,8 +459,9 @@ ${testLines}
         if (!cleanText) {
             throw new common_1.BadRequestException('Text is required for TTS generation.');
         }
+        const spokenText = cleanText.replace(/\bSABCQ\b/gi, 'सब सी क्यू');
         const chunks = [];
-        let remaining = cleanText;
+        let remaining = spokenText;
         while (remaining.length > 0) {
             if (remaining.length <= 180) {
                 chunks.push(remaining);
@@ -546,9 +556,9 @@ STEP 2 [MEANING]: Sincerity se log aap par trust karte hain aur team projects me
 
 STEP 3 [AREA TO WORK]: Lekin aapka Participation Score **${participation}%** aur Hesitation Score **${hesitation}%** dikhata hai ki jab structured environment (jaise classroom ya presentations) me bolna hota hai, tab aap hesitate karte hain. Hesitation ka matlab yeh nahi ki aapko answer nahi pata, balki aap hesitation ki wajah se apna point express nahi karte.
 
-STEP 4 [ACTION & SABCQ TOOL]: Iske liye hum SABCQ Behaviour Practice setup karenge:
+STEP 4 [ACTION & SABCQ TOOL]: Iske liye hum सब सी क्यू (SABCQ) Behaviour Practice setup karenge:
 1. Daily Classroom Target: Har din class me kam se kam 1 question poochna ya 1 answer voluntarily dena.
-2. **SABCQ Habit Tracker**: Daily participation track karna.
+2. **सब सी क्यू Habit Tracker**: Daily participation track karna.
 
 Aap bataiye ${name}, jab class me teacher question poochte hain aur aapko answer pata hota hai, tab haath uthane se aapko kya rokta hai?`;
         }
@@ -563,7 +573,7 @@ STEP 2 [MEANING]: Law me thousands of pages of bare acts aur case studies read k
 
 STEP 3 [AREA TO WORK]: Abhi aapka Communication & Public Speaking Score (49%) develop karne ki zaroorat hai taaki aap courtroom moots aur debates me apni baat strongly convince kar sakein.
 
-STEP 4 [ACTION & SABCQ TOOL]: **SABCQ 60-Second Explanation Task**: Daily kisi bhi legal topic ya news par 1-minute ka short structured presentation practise karein aur Habit Tracker me note karein.
+STEP 4 [ACTION & SABCQ TOOL]: **सब सी क्यू 60-Second Explanation Task**: Daily kisi bhi legal topic ya news par 1-minute ka short structured presentation practise karein aur Habit Tracker me note karein.
 
 Kya aapko Constitutional Law, Legal Debates ya Crime/Judiciary topics padhna pasand hai?`;
         }
@@ -580,7 +590,7 @@ STEP 2 [MEANING]: Management aur Entrepreneurship me sirf marks nahi chalte, bal
 STEP 3 [AREA TO WORK]: Lekin aapka Time Management Score (20%) aur Managerial Execution Score (22%) low side par hai. Yani planning achhi hoti hai, par daily execution me routine break hota hai.
 
 STEP 4 [ACTION & SABCQ TOOL]:
-1. **SABCQ Time Management System**: Daily sirf 3 main priority tasks list karein aur unhe complete hone se pehle doosra task add na karein.
+1. **सब सी क्यू Time Management System**: Daily sirf 3 main priority tasks list karein aur unhe complete hone se pehle doosra task add na karein.
 2. Skill Tracker par daily progress update karein.
 
 Kya aap future me khud ka business/startup launch karne me interested hain ya Corporate Leadership role me?`;
@@ -602,11 +612,11 @@ Kya aap Computer Science, AI, ya Robotics me exploration karna chahenge?`;
         }
         const topScores = [...scores].sort((a, b) => b.score - a.score).slice(0, 3);
         const topList = topScores.map(t => `${t.name} (${t.score}%)`).join(', ');
-        return `Namaste ${name}! Main Priya Sharma, aapki Senior AI Career Counselor. SABCQ Cognitive Pattern Program me aapka swagat hai.
+        return `Namaste ${name}! Main Priya Sharma, aapki Senior AI Career Counselor. सब सी क्यू (SABCQ) Cognitive Pattern Program me aapka swagat hai.
 
 STEP 1 [STRENGTH]: Aapki report analyze karne par aapke top strong areas nikal kar aaye hain: **${topList}**. Aapka Reading Skill aur Logical Personality bohot impressive hai!
 
-STEP 2 [MEANING]: SABCQ ka matlab sirf ek test ka result Dena nahi hai, balki aapke learning pattern, behavior aur real-life skills ko 45-minute growth journey me convert karna hai.
+STEP 2 [MEANING]: सब सी क्यू (SABCQ) ka matlab sirf ek test ka result Dena nahi hai, balki aapke learning pattern, behavior aur real-life skills ko 45-minute growth journey me convert karna hai.
 
 STEP 3 [AREA TO WORK]: Concentration consistency, Calculation accuracy aur Participation me hume step-by-step practice karni hai taaki aapka potential fully transform ho sake.
 

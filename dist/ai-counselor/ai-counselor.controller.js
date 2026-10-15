@@ -24,9 +24,6 @@ let AiCounselorController = class AiCounselorController {
     async startSession(body) {
         return this.counselorService.startCounselorSession(body.customReport || undefined, body.studentId, body.languagePreference);
     }
-    async sendMessage(body) {
-        return this.counselorService.sendMessage(body.sessionId, body.message);
-    }
     async sendVoiceMessage(body) {
         return this.counselorService.sendVoiceMessage(body.sessionId, body.message);
     }
@@ -58,14 +55,6 @@ __decorate([
     __metadata("design:paramtypes", [start_session_dto_1.StartSessionDto]),
     __metadata("design:returntype", Promise)
 ], AiCounselorController.prototype, "startSession", null);
-__decorate([
-    (0, common_1.Post)('chat'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [send_message_dto_1.SendMessageDto]),
-    __metadata("design:returntype", Promise)
-], AiCounselorController.prototype, "sendMessage", null);
 __decorate([
     (0, common_1.Post)('voice-chat'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),

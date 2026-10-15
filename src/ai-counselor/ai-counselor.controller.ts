@@ -17,15 +17,6 @@ export class AiCounselorController {
   }
 
   /**
-   * STAGE 2: ACTIVE CHATTING (NO REPORT SENT AGAIN)
-   */
-  @Post('chat')
-  @HttpCode(HttpStatus.OK)
-  async sendMessage(@Body() body: SendMessageDto) {
-    return this.counselorService.sendMessage(body.sessionId, body.message);
-  }
-
-  /**
    * PURE VOICE-TO-VOICE COUNSELING: NATIVE GEMINI AUDIO STREAM
    */
   @Post('voice-chat')
