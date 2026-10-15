@@ -4,6 +4,7 @@
   "description": "NestJS Backend for AI Counselor Stateful Session POC",
   "main": "dist/main.js",
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "tsc",
     "start": "node dist/main.js",
     "start:dev": "ts-node src/main.ts",
